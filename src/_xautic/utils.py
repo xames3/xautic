@@ -12,16 +12,23 @@ import itertools
 import logging
 import os
 import sys
-import typing as t
+from typing import Any
+from typing import Iterator
+from typing import List
+from typing import Optional
+from typing import Set
+from typing import Tuple
+from typing import Union
+from typing import cast
 
-PathLike = t.Union[str, os.PathLike]
+PathLike = Union[str, os.PathLike]
 
-_logger: t.Optional[logging.Logger] = None
+_logger: Optional[logging.Logger] = None
 
 # These are the directories that we purposely ignore while tracking the
 # changes within the working root. This optimization reduces the CPU
 # utilization significantly since there will be few files to track.
-IGNORED_DIRS: t.Set[PathLike] = {
+IGNORED_DIRS: Set[PathLike] = {
     ".egg-info",
     ".git",
     ".hg",
@@ -29,12 +36,12 @@ IGNORED_DIRS: t.Set[PathLike] = {
     ".pytest_cache",
     "__pycache__",
 }
-VALID_PY_FILES: t.Tuple[str, ...] = (".py", ".pyc", ".pyw")
+VALID_PY_FILES: Tuple[str, ...] = (".py", ".pyc", ".pyw")
 
 # All possible system prefixes from where the imports can be found. The
 # base values are different when running from a virtualenv. The reloader
 # won't scan these directories as it would be too inefficient.
-prefixes: t.Union[t.Set[PathLike], t.Tuple[PathLike, ...]] = {
+prefixes: Union[Set[PathLike], Tuple[PathLike, ...]] = {
     sys.prefix,
     sys.base_prefix,
     sys.exec_prefix,
@@ -55,7 +62,6 @@ def _has_level_handler(logger: logging.Logger) -> bool:
     :param logger: Logger object.
     :return: Handler level state.
     """
-    # TODO (xames3): Understand effective level machinery.
     level = logger.getEffectiveLevel()
     current = logger
     while current:
@@ -67,7 +73,7 @@ def _has_level_handler(logger: logging.Logger) -> bool:
     return False
 
 
-def log(level: str, msg: str, *args: t.Any, **kwargs: t.Any) -> None:
+def _log(level: str, msg: str, *args: Any, **kwargs: Any) -> None:
     """
     Log messages to the `xautic` logger.
 
@@ -79,18 +85,8 @@ def log(level: str, msg: str, *args: t.Any, **kwargs: t.Any) -> None:
     :param level: Logging level severity.
     :param msg: Message to be logged.
 
-    .. code-block:: python
-
-        >>> log("info", "This is an INFO message.")
-        This is an INFO message.
-        >>>
-        >>> log("warning", "This is a WARNING!")
-        This is a WARNING!
-        >>>
-
-    .. note::
-
-        The behaviour of this logger can be overridden.
+    .. warning::
+        This is not a public API anymore, do not use this function.
     """
     global _logger
     if _logger is None:
@@ -102,7 +98,7 @@ def log(level: str, msg: str, *args: t.Any, **kwargs: t.Any) -> None:
     getattr(_logger, level)(msg.rstrip(), *args, **kwargs)
 
 
-def _imported_module_paths() -> t.Iterator[PathLike]:
+def _imported_module_paths() -> Iterator[PathLike]:
     """
     Yield absolute paths of the imported modules.
 
@@ -126,8 +122,8 @@ def _imported_module_paths() -> t.Iterator[PathLike]:
 
 
 def _all_possible_paths(
-    track: t.Set[PathLike], ignore_patterns: t.Set[str]
-) -> t.Set[PathLike]:
+    track: Set[PathLike], ignore_patterns: Set[str]
+) -> Set[PathLike]:
     """
     Return list of paths for the reloader to track.
 
@@ -166,7 +162,7 @@ def _all_possible_paths(
     return paths
 
 
-def _get_args_for_reloading() -> t.List[str]:
+def _get_args_for_reloading() -> List[str]:
     """Return executable args."""
     execs = [sys.executable]
     py_script, *args = sys.argv
@@ -197,7 +193,7 @@ def _get_args_for_reloading() -> t.List[str]:
             args = sys.argv
         else:
             if os.path.isfile(py_script):
-                py_module = t.cast(str, __main__.__package__)
+                py_module = cast(str, __main__.__package__)
                 name = os.path.splitext(os.path.basename(py_script))[0]
                 if name != "__main__":
                     py_module += f".{name}"
