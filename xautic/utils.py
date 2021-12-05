@@ -1,5 +1,4 @@
-"""
-Useful utilities.
+"""Useful utilities.
 
 Utility functions that offers general convenience to facilitate live
 reloading and tracking of the necessary components. Primarily these
@@ -55,8 +54,7 @@ prefixes = tuple(prefixes)
 
 
 def _has_level_handler(logger: logging.Logger) -> bool:
-    """
-    Check if there is a handler in the logging chain that will handle
+    """Check if there is a handler in the logging chain that will handle
     the given logger's effective level.
 
     :param logger: Logger object.
@@ -74,8 +72,7 @@ def _has_level_handler(logger: logging.Logger) -> bool:
 
 
 def _log(level: str, msg: str, *args: Any, **kwargs: Any) -> None:
-    """
-    Log messages to the `xautic` logger.
+    """Log messages to the `xautic` logger.
 
     The logger is created the first time it is needed. If there is no
     level set, it is set to :py:data:`logging.INFO`. If there is no
@@ -99,8 +96,7 @@ def _log(level: str, msg: str, *args: Any, **kwargs: Any) -> None:
 
 
 def _imported_module_paths() -> Iterator[PathLike]:
-    """
-    Yield absolute paths of the imported modules.
+    """Yield absolute paths of the imported modules.
 
     Loop over all the imported modules and try to get their absolute
     file paths. If the path consists of all directories and no file,
@@ -124,8 +120,7 @@ def _imported_module_paths() -> Iterator[PathLike]:
 def _all_possible_paths(
     track: Set[PathLike], ignore_patterns: Set[str]
 ) -> Set[PathLike]:
-    """
-    Return list of paths for the reloader to track.
+    """Return list of paths for the reloader to track.
 
     Paths can be both for python and non-python files. While tracking
     python files, it also tracks the absolute paths of the imported
