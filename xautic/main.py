@@ -262,7 +262,7 @@ def debug(
     .. note::
         Well, you can add non-python files to track but doing so might
         increase the CPU utilization. It is more advisable to track only
-        python files e.g. py, pyc or pyw. 
+        python files e.g. py, pyc or pyw.
     """
     if func is None:
         return functools.partial(

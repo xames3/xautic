@@ -49,7 +49,7 @@ prefixes: Union[Set[PathLike], Tuple[PathLike, ...]] = {
 }
 
 if hasattr(sys, "real_prefix"):
-    prefixes.add(sys.real_prefix) # type: ignore[attr-defined,union-attr]
+    prefixes.add(sys.real_prefix)  # type: ignore[attr-defined,union-attr]
 
 prefixes = tuple(prefixes)
 
