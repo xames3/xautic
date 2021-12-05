@@ -1,5 +1,4 @@
-"""
-Reloading application.
+"""Reloading application.
 
 It allows live reloading of a python script. The implementation is based
 on the live reloading functionality of web frameworks like Flask and
@@ -37,7 +36,7 @@ try:
 except ImportError:
     termios = None  # type: ignore[assignment]
 
-Args = Iterable
+Args = Iterable[Any]
 Kwargs = Mapping[str, Any]
 Function = Callable[..., Any]
 
@@ -48,9 +47,8 @@ threading.current_thread().name = THREADNAME
 
 
 def _ensure_echo_on() -> None:
-    """
-    Ensure that echo mode is enabled. Some tools such as PDB disable it
-    which causes usability issues after a reload.
+    """Ensure that echo mode is enabled. Some tools such as PDB disable
+    it which causes usability issues after a reload.
     """
     if not termios or not sys.stdin.isatty():
         return
@@ -68,8 +66,7 @@ def _trigger_reload(path: PathLike) -> None:
 
 
 class StatReloader:
-    """
-    Stat based reloader.
+    """Stat based reloader.
 
     The reloading is triggered based on the difference of the modified
     status times of the watched files. For this, we need to know how
@@ -77,16 +74,20 @@ class StatReloader:
     them for changes. Once we have this information we can then
     calculate the modified time and later trigger the reloading.
 
-    .. code-block:: python
+    :Examples:
 
-        reloader = StatReloader()
-        with reloader:
-           reloader.run()
+        .. code-block:: python
 
-    .. code-block:: python
+            reloader = StatReloader(interval=5.0)
+            reloader.run()
 
-        reloader = StatReloader(interval=5.0)
-        reloader.run()
+        .. code-block:: python
+
+            # Create a reloader context instance
+            reloader = StatReloader()
+
+            with reloader:
+                reloader.run()
 
     .. note::
         The current implementation is based on the stat based changes
@@ -113,8 +114,7 @@ class StatReloader:
         self.interval = kwargs.get("interval", 1.0)
 
     def __enter__(self) -> "StatReloader":
-        """
-        Enter the runtime context related to this object and populate
+        """Enter the runtime context related to this object and populate
         the initial filesystem state.
         """
         self.step_through()
@@ -124,9 +124,8 @@ class StatReloader:
         """Exit the runtime context related to this object."""
 
     def step_through(self) -> None:
-        """
-        Step through while watching the filesystem and carry on with the
-        re-execution.
+        """Step through while watching the filesystem and carry on with
+        the re-execution.
         """
         for path in itertools.chain(
             _all_possible_paths(self.track, self.ignore_patterns)
@@ -166,8 +165,7 @@ def start_xautic(
 
 
 def restart_with_reloader() -> Union[NoReturn, int]:
-    """
-    Restart the execution in a new Python interpreter with same
+    """Restart the execution in a new Python interpreter with same
     arguments.
     """
     args = _get_args_for_reloading()
@@ -187,9 +185,9 @@ def restart_with_reloader() -> Union[NoReturn, int]:
 def run_with_reloader(
     func: Optional[Function],
     *args: Args,
-    track: Iterable[PathLike] = None,
-    ignore_patterns: Iterable[str] = None,
-    ignore_dirs: Iterable[PathLike] = None,
+    track: Optional[Iterable[PathLike]] = None,
+    ignore_patterns: Optional[Iterable[str]] = None,
+    ignore_dirs: Optional[Iterable[PathLike]] = None,
     interval: Union[float, int] = 1.0,
     **kwargs: Kwargs,
 ) -> None:
@@ -223,13 +221,12 @@ def run_with_reloader(
 
 def debug(
     func: Optional[Function] = None,
-    track: Iterable[PathLike] = None,
-    ignore_patterns: Iterable[str] = None,
-    ignore_dirs: Iterable[PathLike] = None,
+    track: Optional[Iterable[PathLike]] = None,
+    ignore_patterns: Optional[Iterable[str]] = None,
+    ignore_dirs: Optional[Iterable[PathLike]] = None,
     interval: Union[float, int] = 1.0,
 ) -> Function:
-    """
-    Live debugging decorator.
+    """Live debugging decorator.
 
     Decorate function that needs to be reloaded on change. This function
     internally calls :py:func:`run_with_reloader`.
@@ -247,17 +244,19 @@ def debug(
         duration, more aggressively it will track for changes. Defaults
         to 1.0 sec.
 
-    .. code-block:: python
+    :Examples:
 
-        @debug
-        def func(*args, **kwargs):
-            ...
+        .. code-block:: python
 
-    .. code-block:: python
+            @debug
+            def func(*args, **kwargs):
+                ...
 
-        @debug(track=["/home/.bashrc", "/home/.bash_profile"])
-        def func(*args, **kwargs):
-            ...
+        .. code-block:: python
+
+            @debug(track=["/home/.bashrc", "/home/.bash_profile"])
+            def func(*args, **kwargs):
+                ...
 
     .. note::
         Well, you can add non-python files to track but doing so might
