@@ -31,10 +31,10 @@ Quickstart
 ----------
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
-   contents/guide
-   contents/examples
+   howto/guide
+   howto/examples
 
 API reference
 -------------
@@ -42,7 +42,7 @@ API reference
 .. toctree::
    :maxdepth: 2
 
-   contents/apis
+   howto/apis
 
 Indices and tables
 ==================
