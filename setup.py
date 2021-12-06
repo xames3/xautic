@@ -1,5 +1,4 @@
-"""
-xautic setup.
+"""xautic setup.
 
 This will install the ``xautic`` package in the python 3.6+ environment.
 Before proceeding, please ensure you have a virtualenv setup & running.

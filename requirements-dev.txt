@@ -1,9 +1,7 @@
 black
 flake8
-guzzle_sphinx_theme
 isort
 mypy
 pre-commit
 pytest
-sphinx
 tox
