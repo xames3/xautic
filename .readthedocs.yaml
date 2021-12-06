@@ -11,6 +11,13 @@ build:
   tools:
     python: "3.9"
 
+<<<<<<< HEAD
+=======
+# Build documentation in the docs/ directory with Sphinx
+sphinx:
+   configuration: docs/conf.py
+
+>>>>>>> 46aed452d1ba9f1216c2cd0a1a800480b2004266
 # Optionally declare the Python requirements required to build your docs
 python:
    install:
