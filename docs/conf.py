@@ -17,7 +17,7 @@ from xautic import __version__
 
 # -- Project information -----------------------------------------------------
 project = "xautic"
-copyright = "2021, Akshay Mestry (XAMES3)"
+copyright = "2022, Akshay Mestry (XAMES3)"
 author = "Akshay Mestry (XAMES3)"
 
 # The full version, including alpha/beta/rc tags
